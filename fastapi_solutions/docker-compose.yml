@@ -17,7 +17,7 @@ services:
       - xpack.security.enabled=false
       - cluster.routing.allocation.disk.threshold_enabled=false
     healthcheck:
-       test: curl -s http://fastapi-solutions-search-1:9200
+       test: curl -s http://fastapi_solutions-search-1:9200
        interval: 30s
        timeout: 10s
        retries: 50

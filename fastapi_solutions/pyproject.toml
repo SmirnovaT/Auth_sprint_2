@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fastapi-solutions"
+name = "fastapi_solutions"
 version = "0.1.0"
 description = ""
 authors = ["Python Team"]

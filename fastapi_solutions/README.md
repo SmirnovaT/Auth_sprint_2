@@ -25,7 +25,7 @@ docker-compose up --build -d
 
 Запуск приложения для локальной разработки
 ```
-1. cd fastapi-solutions
+1. cd fastapi_solutions
 
 2. python3.12 -m venv venv
 
