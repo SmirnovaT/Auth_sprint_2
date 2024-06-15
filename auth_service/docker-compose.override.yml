@@ -1,0 +1,13 @@
+services:
+
+  auth-service:
+    ports:
+      - "8010:8010"
+
+  users_db:
+    ports:
+      - "5432:5432"
+
+  nginx:
+    ports:
+      - "80:80"
