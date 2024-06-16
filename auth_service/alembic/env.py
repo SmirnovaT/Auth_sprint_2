@@ -32,7 +32,19 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-config.set_main_option('sqlalchemy.url', dsn)
+config.set_main_option("sqlalchemy.url", dsn)
+
+
+def include_object(object_, name, type_, reflected, compare_to):
+    if type_ == "table" and name in {
+        "authentication_histories_000",
+        "authentication_histories_001",
+        "authentication_histories_002",
+        "authentication_histories_003",
+    }:
+        return False
+    else:
+        return True
 
 
 def run_migrations_offline() -> None:
@@ -52,6 +64,7 @@ def run_migrations_offline() -> None:
     context.configure(
         url=url,
         target_metadata=target_metadata,
+        include_object=include_object,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
@@ -61,7 +74,11 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        include_object=include_object,
+    )
 
     with context.begin_transaction():
         context.run_migrations()
@@ -81,6 +98,12 @@ async def run_async_migrations() -> None:
     )
 
     async with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            include_object=include_object,
+        )
+
         await connection.run_sync(do_run_migrations)
 
     await connectable.dispose()
