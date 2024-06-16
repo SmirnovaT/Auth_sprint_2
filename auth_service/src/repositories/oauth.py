@@ -13,14 +13,18 @@ class OAuthRepository(BaseRepository):
 
     model = models.OAuthAccount
 
-    async def create_oauth_account(self, new_oauth_account: OAuthAccount):
+    async def create_oauth_account(
+            self, new_oauth_account: OAuthAccount,
+    ) -> OAuthAccount | None:
         """
         Creates new OAuth account
         """
 
         return await self.create(new_oauth_account)
 
-    async def get_oauth_user(self, oauth_user_id: str, oauth_provider_name: str):
+    async def get_oauth_user(
+            self, oauth_user_id: str, oauth_provider_name: str,
+    ) -> OAuthAccount | None:
         """
         Finds user in OAuthAccount
         """

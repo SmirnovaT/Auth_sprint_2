@@ -115,7 +115,7 @@ class UserRepository(BaseRepository):
 
         return user.role.name if user else None
 
-    async def get_user_by_id(self, user_id: str):
+    async def get_user_by_id(self, user_id: str) -> UserInDB:
         """
         Finds user by id
         """

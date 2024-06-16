@@ -87,6 +87,7 @@ async def oauth_login_redirect(
         response: Response,
         yandex_service: YandexOAuthService = Depends(YandexOAuthService),
         user_service: UserService = Depends(UserService),
+        history_service: AuthHistoryService = Depends(AuthHistoryService),
 ) -> Response:
     session_state = request.query_params.get("state")
     code = request.query_params.get("code")
@@ -105,8 +106,21 @@ async def oauth_login_redirect(
 
     if oauth_provider == "yandex":
         service_user = await yandex_service.get_service_user(code)
+        user_data = Login(user_login=service_user.login, password=service_user.password)
 
-        await user_service.update_all_token(
-            service_user.login, service_user.role_id, response)
+        try:
+            await user_service.login(response, user_data)
+            await history_service.set_history(
+                login=user_data.user_login, user_agent=request.headers["user-agent"], success=True
+            )
+        except Exception as exc:
+            auth_logger.error(f"Error while OAuth login: {exc}")
+            await history_service.set_history(
+                login=user_data.user_login, user_agent=request.headers["user-agent"], success=False
+            )
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED, detail=f"Что-то пошло не так. "
+                                                            f"Проверьте логин или пароль."
+            )
 
     return Response()

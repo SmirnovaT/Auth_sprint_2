@@ -7,6 +7,7 @@ from src.db.models import OAuthAccount, User
 from src.repositories.oauth import OAuthRepository
 from src.repositories.role import RoleRepository
 from src.repositories.user import UserRepository
+from src.schemas.user import UserInDB
 from src.utils.general import make_random_string
 
 
@@ -39,7 +40,7 @@ class YandexOAuthService:
 
         return redirect_url
 
-    async def get_service_user(self, code: str):
+    async def get_service_user(self, code: str) -> UserInDB | None:
         """
         Gets online cinema service user
         """
