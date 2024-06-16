@@ -114,3 +114,12 @@ class UserRepository(BaseRepository):
         user = result.scalars().first()
 
         return user.role.name if user else None
+
+    async def get_user_by_id(self, user_id: str) -> UserInDB:
+        """
+        Finds user by id
+        """
+
+        return await self.db.scalar(
+            select(User).where(self.model.id == user_id)
+        )

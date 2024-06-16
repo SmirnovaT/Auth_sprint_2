@@ -1,0 +1,1 @@
+OAUTH_PROVIDERS = ("yandex",)
