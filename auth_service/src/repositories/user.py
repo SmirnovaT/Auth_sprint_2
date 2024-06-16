@@ -123,3 +123,12 @@ class UserRepository(BaseRepository):
         return await self.db.scalar(
             select(User).where(self.model.id == user_id)
         )
+
+    async def get_user_by_email(self, email: str) -> UserInDB:
+        """
+        Finds user by email
+        """
+
+        return await self.db.scalar(
+            select(User).where(self.model.email == email)
+        )
