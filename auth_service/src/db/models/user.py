@@ -45,6 +45,9 @@ class User(Base, TimestampMixin):
     authentication_histories = relationship(
         "AuthenticationHistory", back_populates="user"
     )
+    oauth_accounts = relationship(
+        "OAuthAccount", back_populates="user"
+    )
 
     def __init__(
         self, login: str, email: str, password: str, first_name: str, last_name: str

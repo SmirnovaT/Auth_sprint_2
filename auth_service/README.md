@@ -1,21 +1,15 @@
-Ссылка на репозиторий - [репозиторий](https://github.com/SmirnovaT/Auth_sprint_1)
-
-### AUTH SERVICE
-
-### AUTH SERVICE для онлайн-кинотеатра
+#### AUTH SERVICE FOR ONLINE CINEMA
 
 ____________________________________________________________________________
 Как запустить проект и проверить его работу
 ____________________________________________________________________________
 
-Подготавливаем переменные окружения
+Запуск приложения с docker compose
 
 ```
 cd auth_service/
 cp .env_example .env
 ```
-
-Запуск приложения с docker compose
 
 ```
 docker-compose up --build
@@ -26,65 +20,72 @@ docker-compose up --build -d
 Запуск приложения для локальной разработки
 
 ```
-1. cd auth_service
-
-2. python3.12 -m venv venv
-
-3. source venv/bin/activate
-
-4. pip3 install poetry
-
-5. poetry install (or python3 -m poetry install)
-
+1. cd auth_service/
+2. cp .env_example .env
+3. python3.12 -m venv auth_venv
+4. source auth_venv/bin/activate
+5. pip3 install poetry
+6. poetry install (or python3 -m poetry install)
 7. docker run -p 6379:6379 redis:7.2.4-alpine
- 
-8. uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
-
+8. docker run -d \
+  --name auth_postgres \
+  -p 5432:5432 \
+  -v $HOME/postgresql/data:/var/lib/postgresql/data \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_DB=postgres  \
+  postgres:13
 9. alembic upgrade head
+10. uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 Создание пользователя с ролью 'admin' с помощью CLI
 
 ```
 1. cd auth_service
-
 2. python3 -m src.commands.main_cli admin strongpassword admin@mail.ru admin 
-
-   or with first name and/or last name
-   
+   or with first name and/or last name:
    python3 -m src.commands.main_cli admin strongpassword admin@mail.ru admin Ivan Petrov
    
 If you heed help, please use: python3 -m src.commands.main_cli --help 
 ```
 
-Тестирование приложения c docker-compose:
-```
-1. cd tests/
-
-2. cp .env_example .env
-
-3. docker-compose up --build
-or
-docker-compose up --build -d
-```
-
-
 Тестирование приложения локально:
 
 ```
-1. Use test database! Change DB_DSN. 
+TBA
+```
 
-2. cd auth_service
+___
+Работа с DB
 
-3. alembic upgrade head
+Создать новую миграцию:
+```
+ alembic revision --autogenerate -m "migration name"
+```
+Накатить миграцию на БД:
+```
+alembic upgrade head
+```
 
-4. cd tests/
+___
+Работа с Яндекс OAuth
 
-5. cp .env_example .env
+>Name: Online Cinema
 
-6. poetry install (or python3 -m poetry install)
+>Redirect URI (local test): https://tolocalhost.com/api/v1/login/oauth/yandex/redirect
 
-7. pytest (python3 -m pytest) 
-   or 
-   pytest -k <test_name> (python3 -m pytest -k <test_name>)
+>Приложение в Яндекс OAuth зарегистрировано на: kristina@melikova.ru
+
+
+Для локального тестирования функционала сервиса с Яндекс OAuth нужны следующие шаги:
+```
+1.В сервисе Яндекс OAuth прописываем Redirect URI:
+https://tolocalhost.com/api/v1/login/oauth/yandex/redirect
+2. В браузер вставляем адрес:
+http://0.0.0.0:8000/api/v1/login/oauth/yandex/
+3. Нажимаем "Войти как ..."
+4. На tolocalhost.com выставляем галку для активации редиректа,
+   указываем port: 8000, host: localhost
+5. Оказываемся тут --> "/oauth/{oauth_provider}/redirect"
+6. Далее выполнится остальная необходимая логика для логина пользователя
 ```
