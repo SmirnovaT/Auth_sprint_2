@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, String, ForeignKey, Boolean
+from sqlalchemy import Column, String, ForeignKey, Boolean, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -10,15 +10,19 @@ from src.utils.mixins import TimestampMixin
 
 class AuthenticationHistory(Base, TimestampMixin):
     __tablename__ = "authentication_histories"
-    __table_args__ = {"comment": "История аутентификации пользователей"}
+    __table_args__ = (
+        UniqueConstraint("id", "user_id"),
+        {
+            "comment": "История аутентификации пользователей",
+            "postgresql_partition_by": "HASH (user_id)",
+        },
+    )
 
     id = Column(
         UUID(as_uuid=True),
-        primary_key=True,
         default=uuid.uuid4,
-        unique=True,
+        primary_key=True,
         nullable=False,
-        index=True,
         comment="Идентификатор аутентификации",
     )
     success = Column(
@@ -34,6 +38,7 @@ class AuthenticationHistory(Base, TimestampMixin):
         UUID(as_uuid=True),
         ForeignKey("users.id"),
         nullable=False,
+        primary_key=True,
         comment="Идентификатор пользователя, связанного с этой записью о входе",
     )
     user = relationship("User", back_populates="authentication_histories")
