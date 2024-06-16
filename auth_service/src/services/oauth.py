@@ -56,16 +56,18 @@ class YandexOAuthService:
 
             return service_user
 
-        new_user = User(
-            login=user_data_from_provider.get("login"),
-            email=make_random_string(),
-            password=make_random_string(),
-            first_name=user_data_from_provider.get("first_name"),
-            last_name=user_data_from_provider.get("last_name"),
-        )
-        role_id = await self.role_repo.role_id_by_name(settings.default_user_role)
-        new_user.role_id = role_id
-        service_user = await self.user_repo.create_user(new_user)
+        service_user = await self.user_repo.get_user_by_email(user_data_from_provider.get("login"))
+        if not service_user:
+            new_user = User(
+                login=user_data_from_provider.get("login"),
+                email=user_data_from_provider.get("login"),
+                password=make_random_string(),
+                first_name=user_data_from_provider.get("first_name"),
+                last_name=user_data_from_provider.get("last_name"),
+            )
+            role_id = await self.role_repo.role_id_by_name(settings.default_user_role)
+            new_user.role_id = role_id
+            service_user = await self.user_repo.create_user(new_user)
 
         new_oauth_account = OAuthAccount(
             user_id=service_user.id,
