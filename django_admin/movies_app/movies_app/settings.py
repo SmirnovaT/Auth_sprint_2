@@ -15,6 +15,14 @@ DEBUG = os.environ.get('DEBUG', False) == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(', ')
 
+AUTH_USER_MODEL = "movies.models.User"
+
+AUTHENTICATION_BACKENDS = [
+    'movies_app.auth.CustomBackend',
+]
+
+AUTH_API_LOGIN_URL = "http://127.0.0.1:8010/api/v1/login/"
+
 INTERNAL_IPS = ['127.0.0.1']
 
 CORS_ALLOW_ALL_ORIGINS = True
