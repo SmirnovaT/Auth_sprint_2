@@ -1,0 +1,92 @@
+services:
+
+# ------- auth_service ------ #
+  auth_service:
+    build: ./auth_service/.
+    env_file:
+      ./auth_service/.env
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      cache:
+        condition: service_started
+    networks:
+      - authnetwork
+
+
+
+# ------- fastapi_solutions ------ #
+  movies_api:
+    build: ./fastapi_solutions/.
+    env_file:
+      ./fastapi_solutions/.env
+    restart: always
+    depends_on:
+      cache:
+        condition: service_started
+    networks:
+      - authnetwork
+
+
+  search:
+    image: krissmelikova/awesome_repository:v1
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - cluster.routing.allocation.disk.threshold_enabled=false
+    healthcheck:
+       test: curl -s http://fastapi_solutions-search-1:9200
+       interval: 30s
+       timeout: 10s
+       retries: 50
+    networks:
+      - authnetwork
+
+
+
+# ------- django_admin ------ #
+  django_admin:
+    build: ./django_admin/.
+    env_file:
+      ./django_admin/.env
+    image: django_admin
+    restart: always
+    volumes:
+      - ./django_admin/movies_app/static:/opt/app/movies_app/static/
+      - ./django_admin/movies_app/media:/opt/app/movies_app/media/
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - authnetwork
+
+
+
+# ------- common_service ------ #
+  cache:
+    image: redis:7.2.4-alpine
+    env_file:
+      ./auth_service/.env
+    volumes:
+      - ./redis-data:/var/lib/redis
+    networks:
+      - authnetwork
+
+
+  postgres:
+    image: postgres:13
+    restart: always
+    env_file: ./django_admin/.env
+    container_name: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    networks:
+      - authnetwork
+
+
+networks:
+  authnetwork:

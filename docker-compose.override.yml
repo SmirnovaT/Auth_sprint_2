@@ -1,0 +1,23 @@
+services:
+
+  auth_service:
+    ports:
+      - "8010:8010"
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+
+  movies_api:
+    ports:
+      - "8000:8000"
+
+  search:
+    ports:
+      - "9200:9200"
+
+
+  django_admin:
+    ports:
+      - "8001:8001"
