@@ -44,6 +44,7 @@ celerybeat.pid
 env/
 venv/
 auth_venv/
+fs_venv/
 .venv/
 ENV/
 env.bak/
