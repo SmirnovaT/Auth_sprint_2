@@ -34,4 +34,4 @@ RUN chmod +x entrypoint.sh
 
 USER myuser
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
