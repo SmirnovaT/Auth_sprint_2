@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 import src.db.models
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -23,6 +24,7 @@ if config.config_file_name is not None:
 
 from src.db.postgres import Base, dsn
 from src.core.config import settings
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -30,7 +32,19 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-config.set_main_option('sqlalchemy.url', dsn)
+config.set_main_option("sqlalchemy.url", dsn)
+
+
+def include_object(object_, name, type_, reflected, compare_to):
+    if type_ == "table" and name in {
+        "authentication_histories_000",
+        "authentication_histories_001",
+        "authentication_histories_002",
+        "authentication_histories_003",
+    }:
+        return False
+    else:
+        return True
 
 
 def run_migrations_offline() -> None:
@@ -50,6 +64,7 @@ def run_migrations_offline() -> None:
     context.configure(
         url=url,
         target_metadata=target_metadata,
+        include_object=include_object,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
@@ -59,7 +74,11 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        include_object=include_object,
+    )
 
     with context.begin_transaction():
         context.run_migrations()
@@ -79,10 +98,15 @@ async def run_async_migrations() -> None:
     )
 
     async with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            include_object=include_object,
+        )
+
         await connection.run_sync(do_run_migrations)
 
     await connectable.dispose()
-
 
 
 def run_migrations_online() -> None:

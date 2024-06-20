@@ -9,10 +9,17 @@ class Settings(BaseSettings):
     """Project settings"""
 
     project_name: str = "auth_service"
+    secret_key: str
 
     auth_algorithm: str
     public_key: str
     private_key: str
+    yandex_oauth_client_id: str
+    yandex_oauth_client_secret: str
+    yandex_oauth_authorize_url: str
+    yandex_oauth_redirect_uri: str
+    yandex_oauth_token_url: str
+    yandex_oauth_info_url: str
 
     db_dsn: str
     postgres_host: str
