@@ -1,13 +1,15 @@
 from http import HTTPStatus
 import uuid
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
+from src.constants.permissions import PERMISSIONS
 from src.core.logger import a_api_logger
 from src.models.film import FilmBase
 from src.models.genre import Genre
 from src.models.person import Person
 from src.services.film import FilmService, get_film_service
+from src.utils.jwt_and_roles import check_token_and_role
 from src.utils.pagination import Paginator
 
 router = APIRouter(tags=["films"])
@@ -80,8 +82,12 @@ async def films(
     description="Получение информации о похожих фильмах",
 )
 async def similar_films(
-    film_id: str, film_service: FilmService = Depends(get_film_service)
+    request: Request,
+    film_id: str,
+    film_service: FilmService = Depends(get_film_service)
 ) -> list[FilmBase]:
+    await check_token_and_role(request, PERMISSIONS["can_get_similar_films"])
+
     films = await film_service.get_similar_films(film_id)
     if not films:
         a_api_logger.error("Фильм не найден")
@@ -96,10 +102,13 @@ async def similar_films(
     description="Получение информации по фильмам посредством полнотекстового поиска",
 )
 async def search_film(
+    request: Request,
     search: str,
     paginated_params: Paginator = Depends(),
     film_service: FilmService = Depends(get_film_service),
 ) -> list[Films] | None:
+    await check_token_and_role(request, PERMISSIONS["can_search_films"])
+
     films = await film_service.search_film(
         search, paginated_params.page_number, paginated_params.page_size
     )
