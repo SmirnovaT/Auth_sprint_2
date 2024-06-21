@@ -103,8 +103,7 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=255)
     is_staff = models.BooleanField(default=False)
 
-    # строка с именем поля модели, которая используется в качестве уникального идентификатора
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'login'
 
     # менеджер модели
     objects = MyUserManager()

@@ -11,17 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False) == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(', ')
-
-AUTH_USER_MODEL = "movies.User"
-
-AUTHENTICATION_BACKENDS = [
-    'movies_app.auth.CustomBackend',
-]
-
-AUTH_API_LOGIN_URL = "http://auth-service:8010/api/v1/login/"
 
 INTERNAL_IPS = ['127.0.0.1']
 

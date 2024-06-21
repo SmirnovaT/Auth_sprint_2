@@ -1,5 +1,6 @@
 import http
 import json
+import logging
 
 import requests
 from django.conf import settings
@@ -32,7 +33,7 @@ class CustomBackend(BaseBackend):
                 user.is_active = True
             user.save()
         except Exception as e:
-            print("Exception: ", e)
+            logging.error(f"Exception: {e}")
             return None
 
         return user
