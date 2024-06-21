@@ -24,7 +24,7 @@ class CustomBackend(BaseBackend):
             user.email = data.get('email')
             user.first_name = data.get('first_name')
             user.last_name = data.get('last_name')
-            print("Role: ", data.get('role')['name'])
+            logging.debug("Role: ", data.get('role')['name'])
             user.is_admin = data.get('role')['name'] == "admin"
             user.is_staff = data.get('role')['name'] == "admin"
             if data.get('is_active'):
