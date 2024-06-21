@@ -15,6 +15,15 @@ services:
       - authnetwork
 
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+    restart: unless-stopped
+    networks:
+      - authnetwork
+
+
 # ------- fastapi_solutions ------ #
   movies_api:
     build: ./fastapi_solutions/.
