@@ -101,6 +101,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    is_staff = models.BooleanField(default=False)
 
     # строка с именем поля модели, которая используется в качестве уникального идентификатора
     USERNAME_FIELD = 'email'
@@ -117,5 +118,8 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
-
+    class Meta:
+        db_table = "content\".\"users"
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
 

@@ -81,7 +81,7 @@ class UserService:
         role = await self.repository.role_name_by_id(user_db.role_id)
 
         await self.update_all_token(user.user_login, role, response)
-        return JSONResponse(content={"message": "Вход успешно выполнен"})
+        return user_db
 
     async def change_password(
         self, response: Response, password_data: dict, password_change_data: dict | None

@@ -23,9 +23,13 @@ class CustomBackend(BaseBackend):
             user.email = data.get('email')
             user.first_name = data.get('first_name')
             user.last_name = data.get('last_name')
-            print("Role: ", data.get('role'))
-            user.is_admin = data.get('role') == "admin"
-            user.is_active = data.get('is_active')
+            print("Role: ", data.get('role')['name'])
+            user.is_admin = data.get('role')['name'] == "admin"
+            user.is_staff = data.get('role')['name'] == "admin"
+            if data.get('is_active'):
+                user.is_active = data.get('is_active')
+            else:
+                user.is_active = True
             user.save()
         except Exception as e:
             print("Exception: ", e)
