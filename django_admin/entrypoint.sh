@@ -1,8 +1,8 @@
 #!/bin/bash
 
 cd movies_app
-python ./movies_app/manage.py migrate --noinput
-python ./movies_app/manage.py collectstatic --no-input
+python manage.py migrate --noinput
+python manage.py collectstatic --no-input
 #python ./movies_app/manage.py createsuperuser --noinput || true
 cd -
 
