@@ -26,6 +26,10 @@ redis = "^5.0.4"
 fastapi-pagination = "^0.12.25"
 psycopg2-binary = "2.9.9"
 fastapi-sessions = "^0.3.2"
+opentelemetry-api = "^1.25.0"
+opentelemetry-sdk = "^1.25.0"
+opentelemetry-instrumentation-fastapi = "^0.46b0"
+opentelemetry-exporter-jaeger = "^1.21.0"
 
 
 [build-system]

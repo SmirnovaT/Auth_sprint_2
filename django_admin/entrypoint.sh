@@ -3,7 +3,7 @@
 cd movies_app
 python manage.py migrate --noinput
 python manage.py collectstatic --no-input
-#python manage.py createsuperuser --noinput || true
+#python ./movies_app/manage.py createsuperuser --noinput || true
 cd -
 
 #cd sqlite_to_postgres

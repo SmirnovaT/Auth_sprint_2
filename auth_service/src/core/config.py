@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     redis_password: str
     cache_expire_in_seconds: int = 864000
 
+    jaeger_host: str
+    jaeger_port: int
+
     default_user_role: str
 
     page_size: int = 10

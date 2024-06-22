@@ -21,3 +21,8 @@ services:
   django_admin:
     ports:
       - "8001:8001"
+
+
+  nginx:
+    ports:
+      - "80:80"

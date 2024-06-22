@@ -10,6 +10,8 @@ class Settings(BaseSettings):
 
     project_name: str = "movies"
 
+    public_key: str
+
     redis_host: str = "127.0.0.1"
     redis_port: int = 6379
     redis_user: str = "app"
