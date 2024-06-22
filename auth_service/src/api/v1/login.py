@@ -43,7 +43,10 @@ async def login(
         await history_service.set_history(
             login=data.user_login, user_agent=user_agent, success=False
         )
-        return
+        raise HTTPException(
+            status_code=HTTPStatus.UNAUTHORIZED, detail=f"Что-то пошло не так. "
+                                                        f"Проверьте логин или пароль."
+        )
 
 
 @router.get(
