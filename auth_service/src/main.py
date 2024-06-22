@@ -28,8 +28,8 @@ app = FastAPI(
     version="1.0.0",
     title=settings.project_name,
     summary="Auth service for online cinema",
-    docs_url="/api/openapi",
-    openapi_url="/api/openapi.json",
+    docs_url="/auth/api/openapi",
+    openapi_url="/auth/api/openapi.json",
     default_response_class=ORJSONResponse,
     swagger_ui_parameters={"syntaxHighlight.theme": "obsidian"},
     contact={
@@ -56,11 +56,11 @@ async def before_request(request: Request, call_next):
 
 app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 
-app.include_router(user.router, prefix="/api/v1/user")
-app.include_router(role.router, prefix="/api/v1/role")
-app.include_router(login.router, prefix="/api/v1/login")
-app.include_router(auth_history.router, prefix="/api/v1/auth-history")
-app.include_router(healthcheck.router, prefix="/api/v1/healthcheck")
+app.include_router(user.router, prefix="/auth/api/v1/user")
+app.include_router(role.router, prefix="/auth/api/v1/role")
+app.include_router(login.router, prefix="/auth/api/v1/login")
+app.include_router(auth_history.router, prefix="/auth/api/v1/auth-history")
+app.include_router(healthcheck.router, prefix="/auth/api/v1/healthcheck")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

@@ -29,8 +29,8 @@ app = FastAPI(
     title=config.project_name,
     summary="Async API for online cinema",
     description="Entry point for clients to search for cinema content",
-    docs_url="/api/openapi",
-    openapi_url="/api/openapi.json",
+    docs_url="/movies/api/openapi",
+    openapi_url="/movies/api/openapi.json",
     openapi_tags=tags,
     default_response_class=ORJSONResponse,
     swagger_ui_parameters={"syntaxHighlight.theme": "obsidian"},
@@ -42,9 +42,9 @@ app = FastAPI(
 )
 
 
-app.include_router(films.router, prefix="/api/v1/films")
-app.include_router(genres.router, prefix="/api/v1/genres")
-app.include_router(persons.router, prefix="/api/v1/persons")
+app.include_router(films.router, prefix="/movies/api/v1/films")
+app.include_router(genres.router, prefix="/movies/api/v1/genres")
+app.include_router(persons.router, prefix="/movies/api/v1/persons")
 
 if __name__ == "__main__":
     uvicorn.run(
