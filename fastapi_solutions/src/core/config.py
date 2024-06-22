@@ -22,8 +22,10 @@ class Settings(BaseSettings):
     page_size: int = 10
     page_number: int = 1
 
+    request_limit_per_minute: int = 20
+
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).resolve().parent.parent.parent / ".env"
+        env_file=Path(__file__).resolve().parent.parent.parent / ".env", extra='ignore'
     )
 
 
