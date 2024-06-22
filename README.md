@@ -7,15 +7,25 @@ ____________________________________________________________________________
 ____________________________________________________________________________
 Как запустить проект и проверить его работу
 ____________________________________________________________________________
+Необходимо заполнить .env по шаблону .env_example внутри кажлого сервиса
 
-```
-TBA
-```
+[auth_service](auth_service/.env_example)
 
-```
-TBA
-```
+[fastapi_solutions](auth_service/.env_example)
 
+[django_admin](auth_service/.env_example)
+
+
+Поднимается сервис с помощью docker compose из корня проекта
 ```
-TBA
+docker-compose up --build
+or
+docker-compose up --build -d
 ```
+Для локального заупуска необходимо следовать инструкции в README.md необходимого сервиса:
+
+[auth_service](auth_service/README.md)
+
+[fastapi_solutions](fastapi_solutions/README.md)
+
+[django_admin](django_admin/README.md)
