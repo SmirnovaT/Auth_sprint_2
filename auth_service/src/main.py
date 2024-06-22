@@ -1,16 +1,18 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import ORJSONResponse
 from fastapi_pagination import add_pagination
 from redis.asyncio import Redis
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.responses import JSONResponse
 
 from src.api.v1 import auth_history, healthcheck, login, role, user
 from src.core.config import settings
 from src.core.jaeger import configure_tracer
 from src.db import cache
+from src.utils.check_request_limit import check_request_limit
 
 
 @asynccontextmanager
@@ -43,7 +45,17 @@ add_pagination(app)
 
 
 @app.middleware("http")
+async def check_request_limit_middleware(request: Request, call_next):
+    try:
+        check_request_limit(request)
+    except HTTPException:
+        return JSONResponse(content={"message": "Слишком много запросов от данного пользователя"})
+    response = await call_next(request)
+    return response
+
+@app.middleware("http")
 async def before_request(request: Request, call_next):
+
     response = await call_next(request)
     request_id = request.headers.get("X-Request-Id")
     if not request_id:
