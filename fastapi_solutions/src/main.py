@@ -2,9 +2,10 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from elasticsearch import AsyncElasticsearch
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import ORJSONResponse
 from redis.asyncio import Redis
+from starlette.responses import JSONResponse
 
 from src.api.v1 import films, genres, persons
 from src.core.config import config
@@ -42,8 +43,11 @@ app = FastAPI(
 )
 
 @app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    check_request_limit(request)
+async def check_request_limit_middleware(request: Request, call_next):
+    try:
+        check_request_limit(request)
+    except HTTPException:
+        return JSONResponse(content={"message": "Слишком много запросов от данного пользователя"})
     response = await call_next(request)
     return response
 
