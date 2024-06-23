@@ -26,3 +26,8 @@ services:
   nginx:
     ports:
       - "80:80"
+
+
+  jaeger:
+    ports:
+      - "16686:16686"

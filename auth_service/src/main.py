@@ -24,7 +24,9 @@ async def lifespan(app: FastAPI):
     await cache.redis.close()
 
 
-configure_tracer()
+if settings.enable_tracer:
+    configure_tracer()
+
 
 app = FastAPI(
     version="1.0.0",
