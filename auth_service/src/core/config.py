@@ -36,6 +36,7 @@ class Settings(BaseSettings):
 
     jaeger_host: str
     jaeger_port: int
+    enable_tracer: bool = True
 
     default_user_role: str
 
