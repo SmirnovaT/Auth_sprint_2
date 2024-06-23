@@ -7,7 +7,7 @@ from fastapi import (
 )
 from fastapi.responses import RedirectResponse
 
-from src.constants.oauth_providers import OAUTH_PROVIDERS
+from src.constants.oauth_providers import OAuthProviders
 from src.core.logger import auth_logger
 from src.schemas.user import Login
 from src.services.oauth import YandexOAuthService
@@ -61,7 +61,7 @@ async def oauth_login(
         oauth_provider: str,
         yandex_service: YandexOAuthService = Depends(YandexOAuthService),
 ) -> RedirectResponse:
-    if oauth_provider not in OAUTH_PROVIDERS:
+    if oauth_provider not in OAuthProviders:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No such provider for OAuth in Online Cinema"
@@ -107,7 +107,7 @@ async def oauth_login_redirect(
             detail="No 'oauth_provider' parameter in request."
         )
 
-    if oauth_provider == "yandex":
+    if oauth_provider == OAuthProviders.YANDEX:
         service_user = await yandex_service.get_service_user(code)
         user_data = Login(user_login=service_user.login, password=service_user.password)
 
