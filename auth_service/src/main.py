@@ -47,7 +47,7 @@ add_pagination(app)
 @app.middleware("http")
 async def check_request_limit_middleware(request: Request, call_next):
     try:
-        check_request_limit(request)
+        await check_request_limit(request)
     except HTTPException:
         return JSONResponse(content={"message": "Слишком много запросов от данного пользователя"})
     response = await call_next(request)
